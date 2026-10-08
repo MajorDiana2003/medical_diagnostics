@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет — ООО «Здоровая жизнь»{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Двухколоночный макет для личного кабинета */
+    .profile-layout {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 30px;
+    }
+
+    /* Карточка с личными данными */
+    .profile-card {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        height: fit-content;
+    }
+    .profile-avatar {
+        font-size: 4rem;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .profile-name {
+        text-align: center;
+        color: #1a202c;
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #f7fafc;
+        padding-bottom: 15px;
+    }
+    .info-group {
+        margin-bottom: 15px;
+    }
+    .info-label {
+        font-size: 0.85rem;
+        color: #a0aec0;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+    .info-value {
+        font-size: 1.05rem;
+        color: #2d3748;
+        font-weight: 500;
+    }
+
+    /* Блок с записями и результатами */
+    .appointments-card {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+    }
+    .card-subtitle {
+        color: #0d6efd;
+        margin-bottom: 20px;
+        font-size: 1.6rem;
+        border-bottom: 2px solid #edf2f7;
+        padding-bottom: 10px;
+    }
+
+    /* Стили для карточек приемов */
+    .appointment-item {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 15px;
+        background-color: #f8fafc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .app-details h4 {
+        color: #2d3748;
+        margin-bottom: 5px;
+    }
+    .app-details p {
+        color: #718096;
+        font-size: 0.95rem;
+    }
+
+    /* Статусы записей */
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        text-align: center;
+    }
+    .status-planned { background-color: #e2e8f0; color: #4a5568; }
+    .status-completed { background-color: #c6f6d5; color: #22543d; }
+    .status-canceled { background-color: #fed7d7; color: #9b2c2c; }
+
+    .btn-download {
+        display: inline-block;
+        background-color: #3182ce;
+        color: white;
+        text-decoration: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        margin-top: 10px;
+        font-weight: 600;
+    }
+    .btn-download:hover { background-color: #2b6cb0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+
+    <!-- Левая колонка: Данные пациента -->
+    <div class="profile-card">
+        <div class="profile-avatar">👤</div>
+        <h3 class="profile-name">{{ user.last_name }}<br>{{ user.first_name }} {{ user.patronymic|default_if_none:"" }}</h3>
+
+        <div class="info-group">
+            <div class="info-label">Электронная почта</div>
+            <div class="info-value">{{ user.email }}</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">Номер телефона</div>
+            <div class="info-value">{{ user.phone|default:"Не указан" }}</div>
+        </div>
+
+        <div class="info-group">
+            <div class="info-label">Статус аккаунта</div>
+            <div class="info-value" style="color: #38a169;">✓ Пациент клиники</div>
+        </div>
+    </div>
+
+    <!-- Правая колонка: История обследований -->
+    <div class="appointments-card">
+        <h2 class="card-subtitle">История обращений и результаты</h2>
+
+        {% for app in appointments %}
+            <div class="appointment-item">
+                <div class="app-details">
+                    <h4>{{ app.service.title }}</h4>
+                    <p><strong>Врач:</strong> {{ app.doctor.last_name }} {{ app.doctor.first_name }}</p>
+                    <p><strong>Дата и время:</strong> {{ app.date_time|date:"d.m.Y H:i" }}</p>
+
+                    {% if app.medical_conclusion %}
+                        <p style="margin-top: 10px; color: #2d3748; background: #fff; padding: 10px; border-radius: 4px; border: 1px solid #edf2f7;">
+                            <strong>Заключение:</strong> {{ app.medical_conclusion }}
+                        </p>
+                    {% endif %}
+
+                    {% if app.result_file %}
+                        <a href="{{ app.result_file.url }}" class="btn-download" target="_blank">📄 Скачать результаты (PDF)</a>
+                    {% endif %}
+                </div>
+
+                <div>
+                    {% if app.status == 'planned' %}
+                        <span class="status-badge status-planned">Запланирован</span>
+                    {% elif app.status == 'completed' %}
+                        <span class="status-badge status-completed">Завершен</span>
+                    {% else %}
+                        <span class="status-badge status-canceled">Отменен</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p style="text-align: center; color: #718096; padding: 40px 0;">Вы еще не записывались на диагностику.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
