@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Медицинский Центр «МедДиагностика»{% endblock %}</title>
+
+    <!-- Вручную прописанные стили для всего сайта -->
+    <style>
+        /* Общие настройки страницы */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-vh: 100vh;
+            background-color: #f4f7f9;
+            color: #333333;
+        }
+
+        /* Шапка сайта (Навигация) */
+        .navbar {
+            background-color: #0d6efd; /* Медицинский синий */
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-container {
+            width: 85%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-brand {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .navbar-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+        .navbar-item {
+            margin-left: 25px;
+        }
+        .navbar-link {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        .navbar-link:hover {
+            color: #ffffff;
+        }
+        .btn-cabinet {
+            background-color: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-cabinet:hover {
+            background-color: #ffffff;
+            color: #0d6efd;
+        }
+
+        /* Основной контент */
+        .main-content {
+            flex: 1;
+            width: 85%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        /* Подвал */
+        .footer {
+            background-color: #1a202c;
+            color: #a0aec0;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9rem;
+            border-top: 3px solid #0d6efd;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" href="{% url 'home' %}">🏥  ООО «Здоровая жизнь»</a>
+            <ul class="navbar-menu">
+                <li class="navbar-item"><a class="navbar-link" href="{% url 'home' %}">Главная</a></li>
+                <li class="navbar-item"><a class="navbar-link" href="{% url 'about' %}">О компании</a></li>
+                <li class="navbar-item"><a class="navbar-link" href="{% url 'home' %}#services">Услуги</a></li>
+                <li class="navbar-item"><a class="navbar-link" href="{% url 'home' %}#doctors">Врачи</a></li>
+                <li class="navbar-item"><a class="navbar-link" href="{% url 'home' %}#feedback">Контакты</a></li>
+                <!-- Динамическая логика авторизации -->
+                {% if user.is_authenticated %}
+                    <li class="navbar-item"><a class="btn-cabinet" href="{% url 'profile' %}">Личный кабинет</a></li>
+                    <li class="navbar-item"><a class="navbar-link" href="{% url 'logout' %}" style="color: #ff8080;">Выйти</a></li>
+                {% else %}
+                    <li class="navbar-item"><a class="btn-cabinet" href="{% url 'login' %}">Войти</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Главная область -->
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Подвал сайта -->
+    <footer class="footer">
+        <p>&copy; 2026 Дипломная работа: Сайт медицинских услуг ООО «Здоровая жизнь»</p>
+    </footer>
+
+</body>
+</html>

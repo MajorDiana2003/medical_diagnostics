@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}О компании — ООО «Здоровая жизнь»{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border: 1px solid #e2e8f0;
+        line-height: 1.8;
+    }
+    .about-header {
+        color: #0d6efd;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #edf2f7;
+        padding-bottom: 10px;
+        font-size: 2.2rem;
+    }
+    .history-block {
+        background-color: #f8fafc;
+        border-left: 4px solid #0d6efd;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 0 8px 8px 0;
+        font-size: 1.1rem;
+    }
+    .sub-title {
+        color: #1a202c;
+        margin: 25px 0 15px 0;
+        font-size: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 5px;
+    }
+    .great-minds-list {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 30px;
+    }
+    .great-minds-item {
+        background: #fff;
+        border: 1px dashed #cbd5e0;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    .great-minds-item strong {
+        color: #2c5282;
+    }
+    .mission-block {
+        font-style: italic;
+        color: #4a5568;
+        background-color: #ebf8ff;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border-left: 4px solid #3182ce;
+    }
+    /* Стили для таблицы/списка практикующих врачей */
+    .doctors-list-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .doctors-list-table th, .doctors-list-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .doctors-list-table th {
+        background-color: #f7fafc;
+        color: #4a5568;
+        font-weight: 600;
+    }
+    .doctors-list-table tr:hover {
+        background-color: #f8fafc;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-container">
+    <h1 class="about-header">О компании</h1>
+
+    <!-- История основания -->
+    <div class="history-block">
+        Клиника основана в 1967 году Кандидатом медицинских наук Григорием Ефимовичем Рахманиновым.
+    </div>
+
+    <!-- Великие умы -->
+    <h2 class="sub-title">Великие умы:</h2>
+    <ul class="great-minds-list">
+        <li class="great-minds-item">
+            👨‍🔬 <strong>Александр Сергеевич Прушкин (Хирург)</strong> — Изучил эктопию селезенки.
+        </li>
+        <li class="great-minds-item">
+            👨‍🔬 <strong>Василий Андреевич Жаренский (Кардиолог)</strong> — Открыл лечение миокардита и перекардита.
+        </li>
+    </ul>
+
+    <!-- Наша миссия -->
+    <div class="mission-block">
+        <p><strong>Наша миссия — сохранять и беречь жизни.</strong></p>
+        <p>Именно поэтому мы принимаем на работу только дипломированных специалистов с практикой работы от 10+ лет.</p>
+    </div>
+
+    <!-- Команда практикующих врачей -->
+    <h2 class="sub-title">Команда врачей:</h2>
+
+    <table class="doctors-list-table">
+        <thead>
+            <tr>
+                <th>ФИО врача</th>
+                <th>Возраст</th>
+                <th>Специализация</th>
+                <th>Стаж работы</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td><strong>{{ doctor.last_name }} {{ doctor.first_name }} {{ doctor.patronymic|default_if_none:"" }}</strong></td>
+                <td>{{ doctor.age }} лет</td>
+                <td><span style="color: #0d6efd;">{{ doctor.specialty.title }}</span></td>
+                <td>{{ doctor.experience }} лет</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: #718096; padding: 20px;">
+                    Список практикующих врачей временно пуст. Вы можете добавить персонал через панель администратора.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

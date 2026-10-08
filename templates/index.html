@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    /* Баннер-приветствие */
+    .hero {
+        background-color: #ffffff;
+        padding: 50px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 40px;
+        border-left: 5px solid #0d6efd;
+    }
+    .hero h1 {
+        color: #0d6efd;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    .hero p {
+        color: #4a5568;
+        font-size: 1.2rem;
+        line-height: 1.6;
+    }
+
+    /* Заголовки секций */
+    .section-title {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2rem;
+        color: #2d3748;
+        position: relative;
+    }
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background-color: #0d6efd;
+        margin: 10px auto 0 auto;
+    }
+
+    /* Сетки (Grid) для карточек услуг и врачей */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 25px;
+        margin-bottom: 50px;
+    }
+
+    /* Стили карточек */
+    .med-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #e2e8f0;
+    }
+    .med-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    .badge {
+        background-color: #edf2f7;
+        color: #4a5568;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        align-self: flex-start;
+        margin-bottom: 15px;
+    }
+    .card-title {
+        font-size: 1.25rem;
+        color: #1a202c;
+        margin-bottom: 10px;
+    }
+    .card-text {
+        color: #718096;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
+    .price-tag {
+        color: #0d6efd;
+        font-size: 1.3rem;
+        font-weight: bold;
+    }
+    .btn-action {
+        background-color: #0d6efd;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        transition: background-color 0.2s;
+    }
+    .btn-action:hover {
+        background-color: #0b5ed7;
+    }
+
+    /* Карточки врачей */
+    .doctor-avatar {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    .doctor-card {
+        text-align: center;
+    }
+    .doctor-card .badge {
+        align-self: center;
+    }
+        /* Стили для формы обратной связи */
+    .feedback-section {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-top: 50px;
+        border: 1px solid #e2e8f0;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #4a5568;
+    }
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cbd5e0;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #0d6efd;
+    }
+    .btn-submit {
+        background-color: #0d6efd;
+        color: #ffffff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.2s;
+    }
+    .btn-submit:hover {
+        background-color: #0b5ed7;
+    }
+    .alert-success {
+        background-color: #c6f6d5;
+        color: #22543d;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Приветственный баннер -->
+<div class="hero">
+    <h1>ООО «Здоровая жизнь»</h1>
+    <p style="margin-bottom: 15px;">Наша компания предоставляет полный перечень услуг медицинской диагностики с дипломированными специалистами.</p>
+    <p><strong>На нашем сайте вы сможете выбрать необходимую услугу и записаться на приём и консультацию к врачу-специалисту.</strong></p>
+</div>
+
+<!-- Секция медицинских услуг -->
+<section id="services">
+    <h2 class="section-title">Наши медицинские услуги</h2>
+    <div class="grid-container">
+        {% for service in services %}
+        <div class="med-card">
+            <span class="badge">{{ service.specialty.title }}</span>
+            <h3 class="card-title">{{ service.title }}</h3>
+            <p class="card-text">{{ service.description|truncatewords:15 }}</p>
+            <div class="card-footer">
+                <span class="price-tag">{{ service.price }} ₽</span>
+                <a href="{% url 'book' %}?service_id={{ service.id }}" class="btn-action">Записаться</a>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; grid-column: 1/-1; color: #718096; padding: 20px 0;">Список услуг временно пуст. Вы можете добавить их в панели администратора.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Секция врачей -->
+<section id="doctors">
+    <h2 class="section-title">Наши специалисты</h2>
+    <div class="grid-container">
+        {% for doctor in doctors %}
+        <div class="med-card doctor-card">
+            <div class="doctor-avatar">👨‍⚕️</div>
+            <h3 class="card-title">{{ doctor.last_name }} {{ doctor.first_name }}</h3>
+            <span class="badge">{{ doctor.specialty.title }}</span>
+            <p class="card-text" style="margin-top: 10px;">Стаж работы: {{ doctor.experience }} лет</p>
+        </div>
+        {% empty %}
+        <p style="text-align: center; grid-column: 1/-1; color: #718096; padding: 20px 0;">Информация о врачах обновляется.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Секция обратной связи / Консультации по симптомам -->
+<section id="feedback" class="feedback-section">
+    <h2 class="section-title" style="margin-bottom: 20px;">Нужна помощь с выбором услуги?</h2>
+    <p style="text-align: center; color: #718096; margin-bottom: 30px;">Опишите ваши симптомы, и наш дежурный специалист свяжется с вами, чтобы подобрать правильную диагностику.</p>
+
+    {% if success_message %}
+        <div class="alert-success">
+            ✓ Ваша заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.
+        </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'home' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Ваше имя</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Иван Иванов" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Электронная почта</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="example@mail.ru" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Номер телефона</label>
+            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+7 (999) 123-45-67" required>
+        </div>
+        <div class="form-group">
+            <label for="message">Опишите ваши симптомы или задайте вопрос</label>
+            <textarea id="message" name="message" class="form-control" rows="4" placeholder="Например: Беспокоят боли в области поясницы, хочу записаться на УЗИ..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Отправить заявку</button>
+    </form>
+</section>
+{% endblock %}
+
