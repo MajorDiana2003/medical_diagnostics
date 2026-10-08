@@ -74,11 +74,12 @@ python manage.py test
 Flake8 и mypy проходят без ошибок
 
 ### 6. Запуск веб-сервера
+
 ```bash
-python manage.py runserver
+docker-compose up --build
 ```
-Сайт будет доступен по адресу: [http://127.0.0.1:8000/ ] 
-Панель управления: [ http://127.0.0.1:8000/admin ]
+Сайт будет доступен по адресу:[ http://localhost:8000/ ]
+Панель управления:[ http://localhost:8000/admin ]
 
 ## Лицензия
 Проект распространяется под [Apache License]
